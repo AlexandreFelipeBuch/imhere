@@ -12,20 +12,28 @@ import { Participant } from "../../components/Participant";
 import { styles } from "./styles";
 
 export function Home() {
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState<String[]>([]);
+  const [participantName, setParticipantName] = useState("");
 
   function handleParticipantAdd() {
-    if (participants.includes("Lucas")) {
-      Alert.alert(
+    if (participants.includes(participantName)) {
+      return Alert.alert(
         "Participante Existe",
         "Já esxite um participante com esse nome."
       );
     }
-    setParticipants((prevState) => [...prevState, "Ana"]);
+    setParticipants((prevState) => [...prevState, participantName]);
+    setParticipantName("");
   }
   function handleParticipantRemove(name: string) {
     Alert.alert("Remover", `Remover o participante ${name}`, [
-      { text: "Sim", onPress: () => Alert.alert("Deletado!") },
+      {
+        text: "Sim",
+        onPress: () =>
+          setParticipants((prevState) =>
+            prevState.filter((participant) => participant !== name)
+          ),
+      },
       { text: "Não", style: "cancel" },
     ]);
   }
@@ -37,6 +45,8 @@ export function Home() {
       <View style={styles.form}>
         <TextInput
           style={styles.input}
+          onChangeText={(text) => setParticipantName(text)}
+          value={participantName}
           placeholder="Nome do Participante"
           placeholderTextColor="#fff"
         />
